@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}FitBuddy - Your Fitness Plan{% endblock %}
+{% block content %}
+<div class="result-page">
+
+{% if error_message %}
+<div class="alert alert-error">{{ error_message }}</div>
+{% endif %}
+
+{% if success_message %}
+<div class="alert alert-success">{{ success_message }}</div>
+{% endif %}
+
+{% if workout_plan %}
+<div class="result-header">
+    <h1 class="result-title">Your AI Fitness Plan</h1>
+    {% if username %}
+    <p class="result-subtitle">Personalised for <strong>{{ username }}</strong></p>
+    {% endif %}
+</div>
+
+<div class="stats-bar">
+    {% if goal %}<span class="stat-chip">Goal: {{ goal | title }}</span>{% endif %}
+    {% if intensity %}<span class="stat-chip">Intensity: {{ intensity | title }}</span>{% endif %}
+    {% if age %}<span class="stat-chip">Age: {{ age }}</span>{% endif %}
+    {% if weight %}<span class="stat-chip">Weight: {{ weight }} kg</span>{% endif %}
+</div>
+
+<div class="plan-grid">
+    <div class="plan-card">
+        <h2 class="plan-card-title">
+            <span class="plan-icon">&#127947;</span>
+            {% if updated_plan %}Original Workout Plan{% else %}Your 7-Day Workout Plan{% endif %}
+        </h2>
+        <div class="plan-content">{{ workout_plan }}</div>
+    </div>
+
+    {% if updated_plan %}
+    <div class="plan-card plan-card-updated">
+        <h2 class="plan-card-title">
+            <span class="plan-icon">&#10024;</span>
+            Updated Workout Plan
+        </h2>
+        <div class="plan-content">{{ updated_plan }}</div>
+    </div>
+    {% endif %}
+
+    {% if nutrition_tip %}
+    <div class="plan-card plan-card-nutrition">
+        <h2 class="plan-card-title">
+            <span class="plan-icon">&#127825;</span>
+            Nutrition &amp; Recovery Tip
+        </h2>
+        <div class="plan-content">{{ nutrition_tip }}</div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="feedback-section">
+    <div class="feedback-card">
+        <h2 class="feedback-title">Refine Your Plan</h2>
+        <p class="feedback-desc">Not satisfied with your plan? Share your feedback and we will update it for you.</p>
+        <form action="/submit-feedback" method="post" id="feedbackForm">
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+            <div class="form-group">
+                <label for="feedback" class="form-label">Your Feedback</label>
+                <textarea id="feedback" name="feedback" class="form-input form-textarea"
+                          placeholder="e.g. I prefer home workouts, I have a knee injury, I want more cardio..."
+                          rows="4" required minlength="5"></textarea>
+            </div>
+            <button type="submit" class="btn btn-secondary btn-full" id="feedbackBtn">
+                <span class="btn-text">Update My Plan</span>
+                <span class="btn-loading" style="display:none;">Updating...</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<div class="empty-state">
+    <p>No workout plan found.</p>
+    <a href="/" class="btn btn-primary">Generate a Plan</a>
+</div>
+{% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}FitBuddy - Admin Dashboard{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-header">
+        <h1 class="admin-title">Admin Dashboard</h1>
+        <div class="admin-actions">
+            <a href="/logout" class="btn btn-outline">Logout</a>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-number">{{ stats.total_users }}</span>
+            <span class="stat-label">Total Users</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ stats.total_plans }}</span>
+            <span class="stat-label">Plans Generated</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ stats.total_updated }}</span>
+            <span class="stat-label">Plans Updated</span>
+        </div>
+    </div>
+
+    {% if users %}
+    <div class="table-wrapper">
+        <h2 class="section-title">All Users &amp; Fitness Plans</h2>
+        <div class="table-scroll">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Weight</th>
+                    <th>Goal</th>
+                    <th>Intensity</th>
+                    <th>Workout Plan</th>
+                    <th>Updated Plan</th>
+                    <th>Nutrition Tip</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.age }}</td>
+                    <td>{{ user.weight }} kg</td>
+                    <td>{{ user.goal | title }}</td>
+                    <td>{{ user.intensity | title }}</td>
+                    <td class="plan-cell">
+                        <div class="plan-preview">{{ user.original_plan[:200] }}{% if user.original_plan|length > 200 %}...{% endif %}</div>
+                    </td>
+                    <td class="plan-cell">
+                        {% if user.updated_plan != "Not updated" %}
+                        <div class="plan-preview updated">{{ user.updated_plan[:200] }}{% if user.updated_plan|length > 200 %}...{% endif %}</div>
+                        {% else %}
+                        <span class="badge-pending">Not updated</span>
+                        {% endif %}
+                    </td>
+                    <td class="plan-cell">
+                        <div class="plan-preview">{{ user.nutrition_tip[:150] }}{% if user.nutrition_tip|length > 150 %}...{% endif %}</div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No users have generated fitness plans yet.</p>
+        <a href="/" class="btn btn-primary">Go to Home</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
